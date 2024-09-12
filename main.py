@@ -90,49 +90,83 @@ def seleccionar_imagen():
 
     window.geometry(f"{width}x{height+230}")
 
+    label.pack(pady=10)
+
     seleccionar_imagen_label.pack_forget()
     seleccionar_imagen_button.pack_forget()
+
+    control_frame.pack(pady=10)
+    nivel_ruido_label.pack(side=LEFT, padx=5)
+    nivel_ruido.pack(side=LEFT, padx=2)
+    agregar_ruido.pack(side=LEFT, padx=10)
+
+    figura_frame.pack(pady=10)
+    figura_label_seleccionada.pack(side=LEFT, padx=5)
+    figura_seleccionada_label.pack(side=LEFT, padx=5)
+    figura_label.pack(side=LEFT, padx=5)
+    figura_original_button.pack(side=LEFT, padx=5)
+    figura1_button.pack(side=LEFT, padx=5)
+    figura2_button.pack(side=LEFT, padx=5)
+    figura3_button.pack(side=LEFT, padx=5)
+    figura4_button.pack(side=LEFT, padx=5)
+    figura5_button.pack(side=LEFT, padx=5)
+
+    button_frame.pack(pady=10)
+    erosion_button.pack(side=LEFT, padx=10)
+    dilatacion_button.pack(side=LEFT, padx=10)
+    reset_button.pack(side=LEFT, padx=10)
+
+    multithreading_frame.pack(pady=10)
+    multithreading_label.pack(side=LEFT, padx=5)
+    multithreading_checkbutton.pack(side=LEFT, padx=5)
+    tiempo_label.pack(side=LEFT, padx=15)
+    tiempo_ejecucion.pack(side=LEFT, padx=5)
+
+
 
 # Crear la ventana
 window = Tk()
 window.title("Procesamiento de Imágenes")
 window.configure(background="black")
 
+window.geometry("300x300")
+
 # Etiqueta "Seleccionar imagen"
 seleccionar_imagen_label = Label(window, text="Seleccionar imagen:", bg="black", fg="white")
-seleccionar_imagen_label.pack(pady=10)
+seleccionar_imagen_label.place(relx=0.5, rely=0.3, anchor="center")  # Centrado en el 30% de la altura
 
 # Botón para seleccionar imagen
 seleccionar_imagen_button = Button(window, text="Seleccionar imagen", command=seleccionar_imagen)
-seleccionar_imagen_button.pack(pady=10)
+seleccionar_imagen_button.place(relx=0.5, rely=0.5, anchor="center")  # Centrado en el 50% de la altura
+
 
 # Label para mostrar la imagen
 label = Label(window)
-label.pack(pady=10)
+label.pack_forget()
 
 # Crear un frame para los controles debajo de la imagen
 control_frame = Frame(window, bg="black")
-control_frame.pack(pady=10)
+control_frame.pack_forget()
 
 # Etiqueta para "Nivel de ruido"
 nivel_ruido_label = Label(control_frame, text="Nivel de ruido:", bg="black", fg="white")
-nivel_ruido_label.pack(side=LEFT, padx=5)
+nivel_ruido_label.pack_forget()
 
 # Input para nivel de ruido
 nivel_ruido = Entry(control_frame, width=4)
-nivel_ruido.pack(side=LEFT, padx=2)
+nivel_ruido.pack_forget()
 
 # Botón para agregar ruido
 agregar_ruido = Button(control_frame, text="Agregar ruido", command=lambda: aplicar_ruido(img_array_global, float(nivel_ruido.get())))
-agregar_ruido.pack(side=LEFT, padx=10)
+agregar_ruido.pack_forget()
 
 # Frame para seleccionar la figura
 figura_frame = Frame(window, bg="black")
-figura_frame.pack(pady=10)
+figura_frame.pack_forget()
 
 # Etiqueta para "Figura seleccionada"
-figura_label = Label(figura_frame, text="Figura seleccionada:", bg="black", fg="white")
-figura_label.pack(side=LEFT, padx=5)
+figura_label_seleccionada = Label(figura_frame, text="Figura seleccionada:", bg="black", fg="white")
+figura_label_seleccionada.pack_forget()
 
 # Inicializar la figuras
 figura_original = Image.open("./assets/figura_original.png")
@@ -167,84 +201,84 @@ nombre_figura_seleccionada = "figura_original"
 figura_seleccionada_tk = ImageTk.PhotoImage(figura_seleccionada)
 
 figura_seleccionada_label = Label(figura_frame, image=figura_seleccionada_tk)
-figura_seleccionada_label.pack(side=LEFT, padx=5)
+figura_seleccionada_label.pack_forget()
 figura_seleccionada_label.image = figura_seleccionada_tk
 
 # Etiqueta para "Seleccionar figura"
 figura_label = Label(figura_frame, text="Seleccionar figura:", bg="black", fg="white")
-figura_label.pack(side=LEFT, padx=5)
+figura_label.pack_forget()
 
 # Botón para seleccionar figura original
 figura_original_button = Button(figura_frame, image=figura_original_tk, command=lambda: seleccionar_figura(figura_original, "figura_original"))
-figura_original_button.pack(side=LEFT, padx=5)
+figura_original_button.pack_forget()
 figura_original_button.image = figura_original_tk
 
 # Botón para seleccionar figura 1
 figura1_button = Button(figura_frame, image=figura1_tk, command=lambda: seleccionar_figura(figura1, "figura1"))
-figura1_button.pack(side=LEFT, padx=5)
+figura1_button.pack_forget()
 figura1_button.image = figura1_tk
 
 # Botón para seleccionar figura 2
 figura2_button = Button(figura_frame, image=figura2_tk, command=lambda: seleccionar_figura(figura2, "figura2"))
-figura2_button.pack(side=LEFT, padx=5)
+figura2_button.pack_forget()
 figura2_button.image = figura2_tk
 
 # Botón para seleccionar figura 3
 figura3_button = Button(figura_frame, image=figura3_tk, command=lambda: seleccionar_figura(figura3, "figura3"))
-figura3_button.pack(side=LEFT, padx=5)
+figura3_button.pack_forget()
 figura3_button.image = figura3_tk
 
 # Botón para seleccionar figura 4
 figura4_button = Button(figura_frame, image=figura4_tk, command=lambda: seleccionar_figura(figura4, "figura4"))
-figura4_button.pack(side=LEFT, padx=5)
+figura4_button.pack_forget()
 figura4_button.image = figura4_tk
 
 # Botón para seleccionar figura 5
 figura5_button = Button(figura_frame, image=figura5_tk, command=lambda: seleccionar_figura(figura5, "figura5"))
-figura5_button.pack(side=LEFT, padx=5)
+figura5_button.pack_forget()
 figura5_button.image = figura5_tk
 
 
 # Frame para los botones de procesamiento de imágenes
 button_frame = Frame(window, bg="black")
-button_frame.pack(pady=10)
+button_frame.pack_forget()
 
 # Botón para aplicar erosión
 erosion_button = Button(button_frame, text="Aplicar erosión", command=lambda: aplicar_erocion(img_array_global, nombre_figura_seleccionada, multithreading.get()))
-erosion_button.pack(side=LEFT, padx=10)
+erosion_button.pack_forget()
 
 # Botón para aplicar dilatación
 dilatacion_button = Button(button_frame, text="Aplicar dilatación", command=lambda: aplicar_dilatacion(img_array_global, nombre_figura_seleccionada, multithreading.get()))
-dilatacion_button.pack(side=LEFT, padx=10)
+dilatacion_button.pack_forget()
 
 # Botón para resetear la imagen
 img_reset = Image.open("./assets/reset.png")
 img_reset = img_reset.resize((20, 20))
 reset_img = ImageTk.PhotoImage(img_reset)  # Convert PIL Image to PhotoImage
 reset_button = Button(button_frame, image=reset_img, command=lambda: reset_image(image_path))
-reset_button.pack(side=LEFT, padx=10)
+reset_button.pack_forget()
 reset_button.image = reset_img
 
 # Frame para activar multithreading
 multithreading_frame = Frame(window, bg="black")
-multithreading_frame.pack(pady=10)
+multithreading_frame.pack_forget()
 
 # Etiqueta para "Multithreading"
 multithreading_label = Label(multithreading_frame, text="Multithreading:", bg="black", fg="white")
-multithreading_label.pack(side=LEFT, padx=5)
+multithreading_label.pack_forget()
 
 # Variable para activar/desactivar multithreading
 multithreading = IntVar()
 multithreading_checkbutton = Checkbutton(multithreading_frame, variable=multithreading)
-multithreading_checkbutton.pack(side=LEFT, padx=5)
+multithreading_checkbutton.pack_forget()
 
 # Etiqueta para "Tiempo de ejecución"
 tiempo_label = Label(multithreading_frame, text="Tiempo de ejecución: ", bg="black", fg="white")
-tiempo_label.pack(side=LEFT, padx=15)
+tiempo_label.pack_forget()
 
 # Etiqueta para mostrar el tiempo de ejecución
 tiempo_ejecucion = Label(multithreading_frame, text="    ", fg="black")
-tiempo_ejecucion.pack( side=LEFT, padx=5)
+tiempo_ejecucion.pack_forget()
 
 # Ejecutar el loop de la ventana
 window.mainloop()
