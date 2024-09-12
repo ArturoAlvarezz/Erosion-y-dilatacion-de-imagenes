@@ -5,6 +5,7 @@ from tkinter import *
 from PIL import Image, ImageTk
 import numpy as np
 import time
+from tkinter import filedialog
 
 
 # Función para actualizar la imagen en el label
@@ -66,38 +67,48 @@ def update_figura(label, figura):
     label.config(image=figura_tk)
     label.image = figura_tk
 
+def seleccionar_imagen():
+    global image_path
+    image_path = filedialog.askopenfilename()
+    img = Image.open(image_path)
+    img_array = np.array(img)
+    global img_array_global
+    img_array_global = img_array
+    
+    # Ajustar la imagen al tamaño de la ventana
+    max_width = window.winfo_screenwidth() - 100  # Un margen para la ventana
+    max_height = window.winfo_screenheight() - 350  # Un margen para la barra superior e inferior
+    img.thumbnail((max_width, max_height))  # Redimensionar manteniendo la proporción
+    
+    img_tk = ImageTk.PhotoImage(img)
+    label.config(image=img_tk)
+    label.image = img_tk  # Evitar que la imagen sea recolectada por el garbage collector
+    width, height = img.size
+
+    if width < 550:
+        width = 550
+
+    window.geometry(f"{width}x{height+230}")
+
+    seleccionar_imagen_label.pack_forget()
+    seleccionar_imagen_button.pack_forget()
 
 # Crear la ventana
 window = Tk()
 window.title("Procesamiento de Imágenes")
 window.configure(background="black")
 
-# Path de la imagen original
-image_path = './assets/imagen2.jpg'
+# Etiqueta "Seleccionar imagen"
+seleccionar_imagen_label = Label(window, text="Seleccionar imagen:", bg="black", fg="white")
+seleccionar_imagen_label.pack(pady=10)
 
-# Cargar y mostrar la imagen original usando PIL
-img = Image.open(image_path)
+# Botón para seleccionar imagen
+seleccionar_imagen_button = Button(window, text="Seleccionar imagen", command=seleccionar_imagen)
+seleccionar_imagen_button.pack(pady=10)
 
-# Array de la imagen original
-img_array_global = np.array(img)
-
-# Obtener la resolución de la pantalla para ajustar el tamaño de la imagen
-max_width = window.winfo_screenwidth() - 100  # Un margen para la ventana
-max_height = window.winfo_screenheight() - 350  # Un margen para la barra superior e inferior
-img.thumbnail((max_width, max_height))  # Redimensionar manteniendo la proporción
-img_tk = ImageTk.PhotoImage(img)
-
-# Obtener la resolución de la imagen redimensionada
-width, height = img.size
-
-if width < 550:
-    width = 550
-
-window.geometry(f"{width}x{height+200}")
-
-# Crear un label para mostrar la imagen original
-label = Label(window, image=img_tk)
-label.pack()
+# Label para mostrar la imagen
+label = Label(window)
+label.pack(pady=10)
 
 # Crear un frame para los controles debajo de la imagen
 control_frame = Frame(window, bg="black")
