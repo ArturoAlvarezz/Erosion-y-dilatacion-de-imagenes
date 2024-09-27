@@ -2,6 +2,7 @@ import numpy as np
 from PIL import Image
 import utils.bordes as bordes
 from multiprocessing import Pool, cpu_count
+import time
 
 def erosionar_la_imagen(args):
     img_array, start, end, width, figura = args
@@ -66,12 +67,24 @@ def erosionar_la_imagen(args):
     
     return img_resultado
 
+# vecinos = np.array([
+#     [120, 80, 200],   # Arriba Izquierda
+#     [100, 90, 180],   # Arriba Derecha
+#     [130, 85, 210],   # Centro
+#     [110, 75, 190],   # Abajo Izquierda
+#     [115, 95, 205]    # Abajo Derecha
+# ])
+
 def erosion(img_array, figura, multithreading):
     img_array = bordes.agregar_borde(img_array)
     height, width, _ = [len(img_array), len(img_array[0]), len(img_array[0][0])]
 
+    start_time = time.time()
+
     if not multithreading:
-        return erosionar_la_imagen((img_array, 1, height - 1, width, figura))
+        img_resultado = erosionar_la_imagen((img_array, 1, height - 1, width, figura))
+        tiempo_de_procesamiento = time.time() - start_time
+        return img_resultado, tiempo_de_procesamiento
     
     num_processes = cpu_count()
     chunk_size = height // num_processes + 1
@@ -79,7 +92,10 @@ def erosion(img_array, figura, multithreading):
     pool = Pool(processes=num_processes)
     args = [(img_array, i * chunk_size, (i + 1) * chunk_size, width, figura) for i in range(num_processes)]
     results = pool.map(erosionar_la_imagen, args)
-    
+
+    tiempo_de_procesamiento = time.time() - start_time
+
     img_resultado = np.vstack(results)
 
-    return img_resultado
+    return img_resultado, tiempo_de_procesamiento
+

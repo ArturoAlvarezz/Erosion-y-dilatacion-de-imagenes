@@ -4,8 +4,9 @@ import utils.sal_y_pimienta as sal_y_pimienta
 from tkinter import *
 from PIL import Image, ImageTk
 import numpy as np
-import time
 from tkinter import filedialog
+import os
+import sys
 
 
 # Función para actualizar la imagen en el label
@@ -23,31 +24,21 @@ def update_image(label):
 
 def aplicar_erocion(img_array, figura, multithreading):
     global img_array_global
-    start_time = time.time()  # Captura el tiempo de inicio
-    img_array_global = erosion.erosion(img_array, figura, multithreading)
-    end_time = time.time()  # Captura el tiempo de finalización
-    execution_time = end_time - start_time
+    img_array_global, execution_time = erosion.erosion(img_array, figura, multithreading)
     update_image(label)
     tiempo_ejecucion.config(text=f"{execution_time:.3f} segundos")
 
 
 def aplicar_dilatacion(img_array, figura, multithreading):
     global img_array_global
-    start_time = time.time()  # Captura el tiempo de inicio
-    img_array_global = dilatacion.dilatacion(img_array, figura, multithreading)
-    end_time = time.time()  # Captura el tiempo de finalización
-    execution_time = end_time - start_time
+    img_array_global, execution_time  = dilatacion.dilatacion(img_array, figura, multithreading)
     update_image(label)
     tiempo_ejecucion.config(text=f"{execution_time:.3f} segundos")
 
 def aplicar_ruido(img_array, noise_level):
     global img_array_global 
-    start_time = time.time()  # Captura el tiempo de inicio
     img_array_global = sal_y_pimienta.add_noise(img_array, noise_level)
-    end_time = time.time()  # Captura el tiempo de finalización
-    execution_time = end_time - start_time
     update_image(label)
-    tiempo_ejecucion.config(text=f"{execution_time:.3f} segundos")
 
 def reset_image(image_path):
     global img_array_global
@@ -125,6 +116,43 @@ def seleccionar_imagen():
 
 
 if __name__ == "__main__":
+
+    # Ruta al directorio actual del script
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+    # Ruta a la carpeta de assets
+    assets_path = os.path.join(BASE_DIR, "assets")
+
+    # Verificar si la aplicación está siendo ejecutada como un archivo empaquetado
+    if getattr(sys, 'frozen', False):
+        # Si está empaquetado con PyInstaller, usar el directorio temporal
+        BASE_DIR = sys._MEIPASS
+    else:
+        # Si se está ejecutando como un script normal, usar el directorio actual
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+    # Construir la ruta completa para la imagen en la carpeta assets
+    image_path_figura_original = os.path.join(BASE_DIR, "assets", "figura_original.png")
+    image_path_figura_1 = os.path.join(BASE_DIR, "assets", "figura1.png")
+    image_path_figura_2 = os.path.join(BASE_DIR, "assets", "figura2.png")
+    image_path_figura_3 = os.path.join(BASE_DIR, "assets", "figura3.png")
+    image_path_figura_4 = os.path.join(BASE_DIR, "assets", "figura4.png")
+    image_path_figura_5 = os.path.join(BASE_DIR, "assets", "figura5.png")
+    image_path_reset = os.path.join(BASE_DIR, "assets", "reset.png")
+
+    # Cargar la imagen con PIL
+    try:
+        figura_original = Image.open(image_path_figura_original)
+        figura1 = Image.open(image_path_figura_1)
+        figura2 = Image.open(image_path_figura_2)
+        figura3 = Image.open(image_path_figura_3)
+        figura4 = Image.open(image_path_figura_4)
+        figura5 = Image.open(image_path_figura_5)
+        reset_img = Image.open(image_path_reset)
+    except FileNotFoundError:
+        print(f"Archivo no encontrado: {image_path}")
+
+
     # Crear la ventana
     window = Tk()
     window.title("Procesamiento de Imágenes")
@@ -170,27 +198,27 @@ if __name__ == "__main__":
     figura_label_seleccionada.pack_forget()
 
     # Inicializar la figuras
-    figura_original = Image.open("./assets/figura_original.png")
+    figura_original = Image.open(image_path_figura_original)
     figura_original = figura_original.resize((20, 20))
     figura_original_tk = ImageTk.PhotoImage(figura_original)
 
-    figura1 = Image.open("./assets/figura1.png")
+    figura1 = Image.open(image_path_figura_1)
     figura1 = figura1.resize((20, 20))
     figura1_tk = ImageTk.PhotoImage(figura1)
 
-    figura2 = Image.open("./assets/figura2.png")
+    figura2 = Image.open(image_path_figura_2)
     figura2 = figura2.resize((20, 20))
     figura2_tk = ImageTk.PhotoImage(figura2)
 
-    figura3 = Image.open("./assets/figura3.png")
+    figura3 = Image.open(image_path_figura_3)
     figura3 = figura3.resize((30, 20))
     figura3_tk = ImageTk.PhotoImage(figura3)
 
-    figura4 = Image.open("./assets/figura4.png")
+    figura4 = Image.open(image_path_figura_4)
     figura4 = figura4.resize((15, 20))
     figura4_tk = ImageTk.PhotoImage(figura4)
 
-    figura5 = Image.open("./assets/figura5.png")
+    figura5 = Image.open(image_path_figura_5)
     figura5 = figura5.resize((20, 20))
     figura5_tk = ImageTk.PhotoImage(figura5)
 
@@ -253,7 +281,7 @@ if __name__ == "__main__":
     dilatacion_button.pack_forget()
 
     # Botón para resetear la imagen
-    img_reset = Image.open("./assets/reset.png")
+    img_reset = Image.open(image_path_reset)
     img_reset = img_reset.resize((20, 20))
     reset_img = ImageTk.PhotoImage(img_reset)  # Convert PIL Image to PhotoImage
     reset_button = Button(button_frame, image=reset_img, command=lambda: reset_image(image_path))
